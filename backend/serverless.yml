@@ -1,7 +1,7 @@
 # TODO: Change the name of the org
-org: fsoft.com.vn
-app: serverless-todo-app
-service: serverless-todo-app
+org: luongnk
+app: todo-app-aws-serverless
+service: todo-app-aws-serverless
 
 plugins:
   - serverless-webpack
@@ -25,7 +25,7 @@ provider:
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: serverless-c4-luongnk1-todo-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -96,7 +96,7 @@ functions:
           cors: true
           authorizer: Auth
           request:
-            schema:
+            schemas:
               application/json: ${file(models/update-todo-model.json)}
     iamRoleStatements:
       - Effect: Allow
@@ -173,8 +173,6 @@ resources:
           - AttributeName: todoId
             AttributeType: S
           - AttributeName: createdAt
-            AttributeType: S
-          - AttributeName: name
             AttributeType: S
         KeySchema:
           - AttributeName: userId

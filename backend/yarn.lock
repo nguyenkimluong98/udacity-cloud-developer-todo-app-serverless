@@ -3473,7 +3473,7 @@
   "resolved" "https://registry.npmjs.org/lodash.union/-/lodash.union-4.6.0.tgz"
   "version" "4.6.0"
 
-"lodash@^4.17.10", "lodash@^4.17.11", "lodash@^4.17.15", "lodash@^4.17.21":
+"lodash@^4.17.11", "lodash@^4.17.15", "lodash@^4.17.20", "lodash@^4.17.21":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -4851,12 +4851,12 @@
   dependencies:
     "object-hash" "^1.1.7"
 
-"serverless-iam-roles-per-function@^1.0.4":
-  "integrity" "sha512-hmOYeVZeWfE4r7NrTBdKpkmhPt/EhN9WZt6H3iDCOli+nHituvUlDZTkEK/qbCpp9Z7nNJYNaQW2K/3OkaLMXw=="
-  "resolved" "https://registry.npmjs.org/serverless-iam-roles-per-function/-/serverless-iam-roles-per-function-1.0.4.tgz"
-  "version" "1.0.4"
+"serverless-iam-roles-per-function@^3.2.0-e97ab49":
+  "integrity" "sha512-D4mFiqJxNb+IRep2wMm2uz8sSjdC61/t5VNqjOAVe1WYos2PnBS3+ttAQwUqAeQ7GGPNLajDMmaOPR18J8yCMg=="
+  "resolved" "https://registry.npmjs.org/serverless-iam-roles-per-function/-/serverless-iam-roles-per-function-3.2.0-e97ab49.tgz"
+  "version" "3.2.0-e97ab49"
   dependencies:
-    "lodash" "^4.17.10"
+    "lodash" "^4.17.20"
 
 "serverless-plugin-canary-deployments@^0.4.7":
   "integrity" "sha512-FvXls9wPPvIgHLmE9q6d5drlLd9ePUCdHY2cKGozkGxVmOuumsDqeSZSdv+atbHyKwKb7PdMc1ZviwHJmwQEMw=="
