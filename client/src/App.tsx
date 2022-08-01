@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Route, Router, Switch } from 'react-router-dom'
-import { Grid, Menu, Segment } from 'semantic-ui-react'
+import { Button, Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
 import { EditTodo } from './components/EditTodo'
@@ -41,7 +41,7 @@ export default class App extends Component<AppProps, AppState> {
             <Grid.Row>
               <Grid.Column width={16}>
                 <Router history={this.props.history}>
-                  {this.generateMenu()}
+                  {this.props.auth.isAuthenticated() && this.generateMenu()}
 
                   {this.generateCurrentPage()}
                 </Router>
@@ -55,32 +55,18 @@ export default class App extends Component<AppProps, AppState> {
 
   generateMenu() {
     return (
-      <>
-        <Menu>
-          <Menu.Item name="home">
-            <Link to="/">Home</Link>
-          </Menu.Item>
-
-          <Menu.Menu position="right">{this.logInLogOutButton()}</Menu.Menu>
-        </Menu>
-      </>
+      <div style={{ textAlign: 'end' }}>
+        <Button.Group size="large">
+          <Button primary onClick={() => this.props.history.push('/')}>
+            Home
+          </Button>
+          <Button.Or />
+          <Button positive onClick={this.handleLogout}>
+            Log Out
+          </Button>
+        </Button.Group>
+      </div>
     )
-  }
-
-  logInLogOutButton() {
-    if (this.props.auth.isAuthenticated()) {
-      return (
-        <Menu.Item name="logout" onClick={this.handleLogout}>
-          Log Out
-        </Menu.Item>
-      )
-    } else {
-      return (
-        <Menu.Item name="login" onClick={this.handleLogin}>
-          Log In
-        </Menu.Item>
-      )
-    }
   }
 
   generateCurrentPage() {
