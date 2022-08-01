@@ -1,5 +1,5 @@
-import * as TodosAccess from '../helpers/todosAcess'
-import * as AttachmentUtils from '../helpers/attachmentUtils'
+import { TodosAccess } from '../helpers/todosAcess'
+import { AttachmentUtils } from '../helpers/attachmentUtils'
 import * as TodosHelper from '../helpers/todos'
 import { TodoItem } from '../models/TodoItem'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
@@ -9,6 +9,8 @@ import * as uuid from 'uuid'
 import { TodoUpdate } from '../models/TodoUpdate'
 
 const logger = createLogger('TodosLogic')
+const todosAccess = new TodosAccess()
+const attachmentUtils = new AttachmentUtils()
 
 // TODO: Implement businessLogic
 export const createTodo = async (
@@ -28,14 +30,14 @@ export const createTodo = async (
 
   logger.info(`Create todo with info:`, { todoItem })
 
-  await TodosAccess.createTodo(todoItem)
+  await todosAccess.createTodo(todoItem)
   return todoItem
 }
 
 export const getTodos = async (userId: string): Promise<TodoItem[]> => {
   logger.info(`Get all todos of user ${userId}`)
 
-  return await TodosAccess.getAllTodos(userId)
+  return await todosAccess.getAllTodos(userId)
 }
 
 export async function deleteTodo(userId: string, todoId: string) {
@@ -43,7 +45,7 @@ export async function deleteTodo(userId: string, todoId: string) {
 
   await validateUserAuth(userId, todoId)
 
-  await TodosAccess.deleteTodo(userId, todoId)
+  await todosAccess.deleteTodo(userId, todoId)
 }
 
 export const updateTodo = async (
@@ -57,7 +59,7 @@ export const updateTodo = async (
   // valida user
   await TodosHelper.validateUserAuth(userId, todoId)
 
-  return await TodosAccess.updateTodo(userId, todoId, todoUpdate as TodoUpdate)
+  return await todosAccess.updateTodo(userId, todoId, todoUpdate as TodoUpdate)
 }
 
 export const getUploadAttachmentUrl = async (
@@ -70,19 +72,19 @@ export const getUploadAttachmentUrl = async (
 
   await TodosHelper.validateUserAuth(userId, todoId)
 
-  const attachmentUrl = AttachmentUtils.getAttachmentUrl(todoId)
+  const attachmentUrl = attachmentUtils.getAttachmentUrl(todoId)
   logger.info(`AttachmentUrl for upload : ${attachmentUrl}`)
 
-  await TodosAccess.updateAttachmentUrl(userId, todoId, attachmentUrl)
+  await todosAccess.updateAttachmentUrl(userId, todoId, attachmentUrl)
 
-  const uploadUrl = await AttachmentUtils.getUploadUrl(todoId)
+  const uploadUrl = await attachmentUtils.getUploadUrl(todoId)
   logger.info(`AttachmentUrl: ${uploadUrl}`)
 
   return uploadUrl
 }
 
 const validateUserAuth = async (userId: string, todoId: string) => {
-  const todo = await TodosAccess.getTodo(userId, todoId)
+  const todo = await todosAccess.getTodo(userId, todoId)
 
   if (!todo) throw new Error(`Todo ${todoId} not found`)
 

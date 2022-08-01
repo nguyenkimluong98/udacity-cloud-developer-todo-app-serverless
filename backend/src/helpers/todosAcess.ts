@@ -9,131 +9,127 @@ const XAWS = AWSXRay.captureAWS(AWS)
 
 const logger = createLogger('TodosAccess')
 
-const docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient()
-const todosTable = process.env.TODOS_TABLE
-const todosIndex = process.env.TODOS_CREATED_AT_INDEX
-
 // TODO: Implement the dataLayer logic
+export class TodosAccess {
+  constructor(
+    private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
+    private readonly todosTable = process.env.TODOS_TABLE,
+    private readonly todosIndex = process.env.TODOS_CREATED_AT_INDEX
+  ) {}
 
-export const getAllTodos = async (userId: string): Promise<TodoItem[]> => {
-  logger.info(`Get all todos of user ${userId}`)
+  getAllTodos = async (userId: string): Promise<TodoItem[]> => {
+    logger.info(`Get all todos of user ${userId}`)
 
-  const result = await docClient
-    .query({
-      TableName: todosTable,
-      IndexName: todosIndex,
-      KeyConditionExpression: 'userId = :id',
-      ExpressionAttributeValues: {
-        ':id': userId
-      },
-      ScanIndexForward: false
-    })
-    .promise()
+    const result = await this.docClient
+      .query({
+        TableName: this.todosTable,
+        IndexName: this.todosIndex,
+        KeyConditionExpression: 'userId = :id',
+        ExpressionAttributeValues: {
+          ':id': userId
+        },
+        ScanIndexForward: false
+      })
+      .promise()
 
-  return result.Items as TodoItem[]
-}
+    return result.Items as TodoItem[]
+  }
 
-export const createTodo = async (todoItem: TodoItem): Promise<TodoItem> => {
-  logger.info(`Create todo`, todoItem)
+  createTodo = async (todoItem: TodoItem): Promise<TodoItem> => {
+    logger.info(`Create todo`, todoItem)
 
-  await docClient
-    .put({
-      TableName: todosTable,
-      Item: todoItem
-    })
-    .promise()
+    await this.docClient
+      .put({
+        TableName: this.todosTable,
+        Item: todoItem
+      })
+      .promise()
 
-  return todoItem
-}
+    return todoItem
+  }
 
-export const getTodo = async (
-  userId: string,
-  todoId: string
-): Promise<TodoItem> => {
-  logger.info(`Get todo: ${todoId} of user: ${userId}`)
+  getTodo = async (userId: string, todoId: string): Promise<TodoItem> => {
+    logger.info(`Get todo: ${todoId} of user: ${userId}`)
 
-  const result = await docClient
-    .get({
-      TableName: todosTable,
-      Key: {
-        userId: userId,
-        todoId: todoId
-      }
-    })
-    .promise()
+    const result = await this.docClient
+      .get({
+        TableName: this.todosTable,
+        Key: {
+          userId: userId,
+          todoId: todoId
+        }
+      })
+      .promise()
 
-  logger.info(`got result ${result.Item}`)
+    logger.info(`got result ${result.Item}`)
 
-  return result.Item as TodoItem
-}
+    return result.Item as TodoItem
+  }
 
-export const updateTodo = async (
-  userId: string,
-  todoId: string,
-  todoUpdate: TodoUpdate
-) => {
-  logger.info(`Update todo ${todoId} of user ${userId}`)
+  updateTodo = async (
+    userId: string,
+    todoId: string,
+    todoUpdate: TodoUpdate
+  ) => {
+    logger.info(`Update todo ${todoId} of user ${userId}`)
 
-  const result = await docClient
-    .update({
-      TableName: todosTable,
-      Key: {
-        userId: userId,
-        todoId: todoId
-      },
-      UpdateExpression: 'set #name = :name, dueDate = :dueDate, done = :done',
-      ExpressionAttributeNames: {
-        '#name': 'name'
-      },
-      ExpressionAttributeValues: {
-        ':name': todoUpdate.name,
-        ':dueDate': todoUpdate.dueDate,
-        ':done': todoUpdate.done
-      }
-    })
-    .promise()
+    const result = await this.docClient
+      .update({
+        TableName: this.todosTable,
+        Key: {
+          userId: userId,
+          todoId: todoId
+        },
+        UpdateExpression: 'set #name = :name, dueDate = :dueDate, done = :done',
+        ExpressionAttributeNames: {
+          '#name': 'name'
+        },
+        ExpressionAttributeValues: {
+          ':name': todoUpdate.name,
+          ':dueDate': todoUpdate.dueDate,
+          ':done': todoUpdate.done
+        }
+      })
+      .promise()
 
-  logger.info(`Update result: ${result}`)
-}
+    logger.info(`Update result: ${result}`)
+  }
 
-export const deleteTodo = async (userId: string, todoId: string) => {
-  logger.info(`deleting todo ${todoId} of user ${userId}`)
+  deleteTodo = async (userId: string, todoId: string) => {
+    logger.info(`deleting todo ${todoId} of user ${userId}`)
 
-  await docClient
-    .delete({
-      TableName: todosTable,
-      Key: {
-        userId: userId,
-        todoId: todoId
-      }
-    })
-    .promise()
-}
+    await this.docClient
+      .delete({
+        TableName: this.todosTable,
+        Key: {
+          userId: userId,
+          todoId: todoId
+        }
+      })
+      .promise()
+  }
 
-export const updateAttachmentUrl = async (
-  userId: string,
-  todoId: string,
-  url: string
-) => {
-  logger.info(`Update todo ${todoId}, attachment ${url}`)
+  updateAttachmentUrl = async (userId: string, todoId: string, url: string) => {
+    logger.info(`Update todo ${todoId}, attachment ${url}`)
 
-  const result = await docClient
-    .update({
-      TableName: todosTable,
-      Key: {
-        userId: userId,
-        todoId: todoId
-      },
-      ExpressionAttributeNames: {
-        '#todo_attachmentUrl': 'attachmentUrl'
-      },
-      ExpressionAttributeValues: {
-        ':attachmentUrl': url
-      },
-      UpdateExpression: 'SET #todo_attachmentUrl = :attachmentUrl',
-      ReturnValues: 'ALL_NEW'
-    })
-    .promise()
+    const result = await this.docClient
+      .update({
+        TableName: this.todosTable,
+        Key: {
+          userId: userId,
+          todoId: todoId
+        },
+        ExpressionAttributeNames: {
+          '#todo_attachmentUrl': 'attachmentUrl'
+        },
+        ExpressionAttributeValues: {
+          ':attachmentUrl': url
+        },
+        UpdateExpression: 'SET #todo_attachmentUrl = :attachmentUrl',
+        ReturnValues: 'ALL_NEW'
+      })
+      .promise()
 
-  logger.info(`Updated todo ${todoId}, attachment ${url}, result: ${result}`)
+    logger.info(`Updated todo ${todoId}, attachment ${url}, result: ${result}`)
+  }
 }

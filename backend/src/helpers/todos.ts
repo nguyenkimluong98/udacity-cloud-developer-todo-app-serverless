@@ -1,12 +1,13 @@
-import * as TodosAccess from './todosAcess'
+import { TodosAccess } from './todosAcess'
 import { createLogger } from '../utils/logger'
 
 const logger = createLogger('TodosLogic')
+const todosAccess = new TodosAccess()
 
 // TODO: Implement businessLogic
 
 export const validateUserAuth = async (userId: string, todoId: string) => {
-  const todo = await TodosAccess.getTodo(userId, todoId)
+  const todo = await todosAccess.getTodo(userId, todoId)
 
   if (!todo) throw new Error(`Todo ${todoId} not found`)
 
