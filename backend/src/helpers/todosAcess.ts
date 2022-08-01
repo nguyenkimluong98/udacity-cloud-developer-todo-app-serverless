@@ -80,14 +80,17 @@ export class TodosAccess {
           userId: userId,
           todoId: todoId
         },
-        UpdateExpression: 'set #name = :name, dueDate = :dueDate, done = :done',
+        UpdateExpression:
+          'set #name = :name, description = :description, dueDate = :dueDate, done = :done, #status = :status',
         ExpressionAttributeNames: {
-          '#name': 'name'
+          '#name': 'name',
+          '#status': 'status'
         },
         ExpressionAttributeValues: {
           ':name': todoUpdate.name,
+          ':description': todoUpdate.description,
           ':dueDate': todoUpdate.dueDate,
-          ':done': todoUpdate.done
+          ':status': todoUpdate.status
         }
       })
       .promise()

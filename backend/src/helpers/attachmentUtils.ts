@@ -19,7 +19,7 @@ export class AttachmentUtils {
     return this.s3.getSignedUrl('putObject', {
       Bucket: this.bucketName,
       Key: todoId,
-      Expires: this.urlExpiration
+      Expires: parseInt(this.urlExpiration)
     })
   }
 }

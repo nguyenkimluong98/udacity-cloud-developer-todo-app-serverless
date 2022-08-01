@@ -25,7 +25,8 @@ export const createTodo = async (
     createdAt: new Date().toISOString(),
     name: createTodoRequest.name,
     dueDate: createTodoRequest.dueDate,
-    done: false
+    description: createTodoRequest.description,
+    status: 0
   }
 
   logger.info(`Create todo with info:`, { todoItem })
